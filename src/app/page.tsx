@@ -25,7 +25,7 @@ export default function Home() {
   const [isDark, setIsDark] = useState(false);
   const [confettiKey, setConfettiKey] = useState(0);
 
-  const confettiPieces = useMemo(() => Array.from({ length: 26 }, (_, index) => index), []);
+  const confettiPieces = useMemo(() => Array.from({ length: 42 }, (_, index) => index), []);
 
   const boxes = useMemo(
     () =>
@@ -68,19 +68,6 @@ export default function Home() {
         <span aria-hidden="true">{isDark ? "☀" : "☾"}</span>
         {isDark ? "Light mode" : "Dark mode"}
       </button>
-      <div className="confetti-layer" key={confettiKey} aria-hidden="true">
-        {confettiPieces.map((piece) => (
-          <span
-            className="confetti-piece"
-            key={piece}
-            style={{
-              "--confetti-index": piece,
-              "--confetti-x": `${piece % 2 === 0 ? 1 : -1}${40 + ((piece * 17) % 180)}px`,
-              "--confetti-y": `-${80 + ((piece * 23) % 180)}px`,
-            } as CSSProperties}
-          />
-        ))}
-      </div>
       <section className="hero" aria-labelledby="page-title">
         <div className="sparkle sparkle-one" aria-hidden="true">✦</div>
         <div className="sparkle sparkle-two" aria-hidden="true">✧</div>
@@ -118,6 +105,21 @@ export default function Home() {
                 <span className="box-lid" aria-hidden="true"><span className="ribbon ribbon-vertical" /><span className="ribbon ribbon-horizontal" /></span>
                 <span className="box-body" aria-hidden="true"><span className="box-shine" /></span>
                 {isOpened && <span className="opened-icon" aria-hidden="true">{box.surprise.icon}</span>}
+                {isSelected && (
+                  <span className="box-confetti" key={confettiKey} aria-hidden="true">
+                    {confettiPieces.map((piece) => (
+                      <span
+                        className="confetti-piece"
+                        key={piece}
+                        style={{
+                          "--confetti-index": piece,
+                          "--confetti-x": `${Math.cos((piece / confettiPieces.length) * Math.PI * 2) * (55 + (piece % 4) * 18)}px`,
+                          "--confetti-y": `${Math.sin((piece / confettiPieces.length) * Math.PI * 2) * (55 + (piece % 4) * 18)}px`,
+                        } as CSSProperties}
+                      />
+                    ))}
+                  </span>
+                )}
               </button>
             );
           })}
